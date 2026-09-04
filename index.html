@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediKiosk - Smart Patient Form</title>
+</head>
+<body>
+
+    <div>
+        <h2>MediKiosk - Data Entry</h2>
+        
+        <!-- Vitals Input -->
+        <div>
+            <div>
+                <label>Patient Name</label>
+                <input type="text" id="patientName" placeholder="e.g. Ramesh Kumar">
+            </div>
+            <div>
+                <label>Age</label>
+                <input type="number" id="age" placeholder="45">
+            </div>
+            <div>
+                <label>BP / Vitals</label>
+                <input type="text" id="vitals" placeholder="120/80 mmHg">
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Voice Input Section -->
+        <div>
+            <label>Symptoms & Medical History</label><br>
+            <textarea id="symptomsInput" rows="4" cols="50" placeholder="Click mic and start speaking..."></textarea><br>
+            <button onclick="startVoiceInput()">🎤 Start Voice Dictation</button>
+        </div>
+
+        <br>
+
+        <!-- Action Button -->
+        <button onclick="generateSummary()">Generate AI Summary & Transfer to Doctor</button>
+    </div>
+
+    <hr>
+
+    <!-- Output Section (Shuruat mein hidden rehega) -->
+    <div id="outputSection" style="display:none;">
+        <h3>AI Processed Output (Doctor View)</h3>
+        <p><strong>Patient:</strong> <span id="outName"></span> | <strong>Age:</strong> <span id="outAge"></span> | <strong>Vitals:</strong> <span id="outVitals"></span></p>
+        
+        <h4>Structured Clinical Summary (AI Generated):</h4>
+        <ul>
+            <li><strong>Primary Symptoms:</strong> <span id="outSymptoms"></span></li>
+            <li><strong>AI Risk Assessment:</strong> Mild Fever & High BP detected. Recommended monitoring.</li>
+            <li><strong>Action:</strong> Sent to Doctor Dashboard for E-Prescription.</li>
+        </ul>
+    </div>
