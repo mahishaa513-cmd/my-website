@@ -2,55 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MediKiosk - Smart Patient Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medikiosk - Smart Patient Form</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div>
-        <h2>MediKiosk - Data Entry</h2>
-        
-        <!-- Vitals Input -->
+    <div class="container">
+        <h2>Medikiosk - Patient Case-Taking Platform(AYUSH & Allopathy)</h2>
+        <br><hr><br>
         <div>
+            <label>System Mode:</label>
+            <select id = "modeSelect">
+                <option value = "Alopathy">Standard Allopathy</option>
+                <option value = "Ayurveda">Native Ayurveda (AYUSH)</option>
+            </select>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <label>ABDM Health ID:</label>
+            <input type="text" id="abdmID" placeholder="e.g. 14-digit-ABHA-ID">
+        </div>
+        <br><hr><br>
+        <div>
+            <h3>LAYER 1: PATIENT INTERFACE (VITALS & DEMOGRAPHICS)</h3>
+            <br>
             <div>
                 <label>Patient Name</label>
                 <input type="text" id="patientName" placeholder="e.g. Ramesh Kumar">
-            </div>
+            </div><br>
             <div>
                 <label>Age</label>
                 <input type="number" id="age" placeholder="45">
-            </div>
+            </div><br>
             <div>
-                <label>BP / Vitals</label>
+                <label>Vitals</label>
                 <input type="text" id="vitals" placeholder="120/80 mmHg">
+            </div><br>
+            <div>
+                <label>Prakriti Analysis</label>
+                <select id = "prakriti">
+                    <option value = "Vata-Pitta">Vata-Pitta</option>
+                    <option value = "Kapha">Kapha</option>
+                    <option value = "Pitta-Kapha">Pitta-Kapha</option>
+                </select>
+                
+                <label>Dosha Imbalance:</label>
+                <input type="text" id="Dosha" placeholder="e.g. Aggravated Data">
             </div>
         </div>
 
         <br>
-
-        <!-- Voice Input Section -->
         <div>
             <label>Symptoms & Medical History</label><br>
             <textarea id="symptomsInput" rows="4" cols="50" placeholder="Click mic and start speaking..."></textarea><br>
             <button onclick="startVoiceInput()">🎤 Start Voice Dictation</button>
         </div>
-
         <br>
-
-        <!-- Action Button -->
         <button onclick="generateSummary()">Generate AI Summary & Transfer to Doctor</button>
     </div>
-
     <hr>
-
-    <!-- Output Section (Shuruat mein hidden rehega) -->
     <div id="outputSection" style="display:none;">
         <h3>AI Processed Output (Doctor View)</h3>
         <p><strong>Patient:</strong> <span id="outName"></span> | <strong>Age:</strong> <span id="outAge"></span> | <strong>Vitals:</strong> <span id="outVitals"></span></p>
         
         <h4>Structured Clinical Summary (AI Generated):</h4>
-        <ul>
+        <ol>
             <li><strong>Primary Symptoms:</strong> <span id="outSymptoms"></span></li>
             <li><strong>AI Risk Assessment:</strong> Mild Fever & High BP detected. Recommended monitoring.</li>
             <li><strong>Action:</strong> Sent to Doctor Dashboard for E-Prescription.</li>
-        </ul>
+        </ol>
     </div>
+
+    <script>
+        function startVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+
+                recognition.lang = 'en-US'; // English ke liye ('hi-IN' Hindi ke liye kar sakte ho)
+                recognition.interimResults = false;
+
+                const textarea = document.getElementById('symptomsInput');
+                textarea.placeholder = "Listening... Speak now...";
+
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    textarea.value = transcript;
+                };
+
+                recognition.onerror = function(event) {
+                    alert("Voice Input Error: " + event.error);
+                };
+            } else {
+                alert("Aapka browser Voice Recognition support nahi karta. Chrome browser use karein.");
+            }
+        }
+        function generateSummary() {
+            const name = document.getElementById('patientName').value || "Ramesh Kumar";
+            const age = document.getElementById('age').value || "45";
+            const vitals = document.getElementById('vitals').value || "120/80 mmHg";
+            const symptoms = document.getElementById('symptomsInput').value || "Fever for 2 days, body pain, headache";
+
+            // Populate Output Data
+            document.getElementById('outName').innerText = name;
+            document.getElementById('outAge').innerText = age;
+            document.getElementById('outVitals').innerText = vitals;
+            document.getElementById('outSymptoms').innerText = symptoms;
+
+            // Show Output Section
+            document.getElementById('outputSection').style.display = 'block';
+            
+            alert("AI Processing Complete! Data transferred to Doctor View.");
+        }
+    </script>
+</body>
+</html>
